@@ -1,0 +1,11 @@
+data
+.idea
+.bsp
+target
+project/target
+.DS_Store
+data/.DS_Store
+src/.DS_Store
+runCode
+log
+etc/log
