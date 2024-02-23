@@ -115,7 +115,7 @@ Make sure the compatibility of `spark packages`.
 ### Configure 
 
 The configure file is `./etc/config.conf`.\
-The log is under `./etc/log/`, and log name can be set in config file by `logFileName`.\
+The log is under `./etc/log/`, and log name can be set by `logFileName`.\
 Key parameters:
 * mode: paratition or group;
 * ts_length: data series dimension;
