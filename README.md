@@ -129,7 +129,6 @@ Other parameters for data series generator and ground truth generator
 * rw**  : parameters generate randomwalk data series;
 * gt**  : parameters create ground truth;
 
-The log is 
 ### Run code:
 Compile code and get the jar file: `climer.jar`
 
