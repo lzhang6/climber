@@ -34,6 +34,8 @@ The functional features include: `Index creation` and `Query process` whiile the
 - Ground truth generation: `src/.../climber/RandWalkTsCreater.scala`
 - Configure:  `src/.../climber/cfg/*`
   - index config: `src/.../climber/cfg/IdxCfg.scala`
+  - ground truth config: `src/.../climber/cfg/GtCfg.scala`
+  - randomwalk config: `src/.../climber/cfg/RwCfg.scala` 
 
 ### Critical Functions
 
@@ -42,7 +44,7 @@ The functional features include: `Index creation` and `Query process` whiile the
  *  since dataset is load, convert all data series to paa (cache);
  *  output: RDD[Array[Float]]: dataseries_paa;
  *           Broadcast[Array[(Short, Array[Float])]]: pivot_id and pivots; */          
-def sample_pivots(sc: SparkContext, idxcfg: IdxCfg): 
+def Index.sample_pivots(sc: SparkContext, idxcfg: IdxCfg): 
                   (RDD[Array[Float]], 
                    Broadcast[Array[(Short, Array[Float])]])
 ```
@@ -50,7 +52,7 @@ def sample_pivots(sc: SparkContext, idxcfg: IdxCfg):
 ```scala
 /** convert paa to ranking-sensitive representation;
  *  output: Array[Short]: representation; */  
-def cvtPaaTo4Ps_os(paa: Array[Float],
+def Ops.cvtPaaTo4Ps_os(paa: Array[Float],
                    pivots: Array[(Short, Array[Float])],
                    prefix_length: Int): Array[Short]
 ```
@@ -58,7 +60,7 @@ def cvtPaaTo4Ps_os(paa: Array[Float],
 ```scala
 /** retrieve centers for groups;
  *  output: Array[Short]: centers; */  
-def retrieve(sc: SparkContext,
+def Group.retrieve(sc: SparkContext,
             p4s_os_weight_sample: RDD[(String, Long)],
             idxcfg: IdxCfg): Array[(Int, Array[Short])]
 ```
@@ -67,19 +69,19 @@ def retrieve(sc: SparkContext,
 /** split group into partitions;
  *  output: Int: partition number;
  *          Array[(Int, Trie)]: center_to_partition; */ 
-def split_groups(sc: SparkContext,
+def Group.split_groups(sc: SparkContext,
                  p4s_os_weight: RDD[(String, Long)],
                  centers: Array[(Int, Array[Short])],
                  idxcfg: IdxCfg): (Int, Array[(Int, Trie)])
 ```
 ```scala
 /** trie construction; */ 
-def construct(p4s_os_weight: Array[(String, Long)],
+def Trie.construct(p4s_os_weight: Array[(String, Long)],
             block_cap: Int): Unit
 ```
 ```scala
 /** shuffle all data series; */ 
-def shuffle_data_partition_mode(sc: SparkContext,
+def Index.shuffle_data_partition_mode(sc: SparkContext,
                                 centers: Array[(Int, Array[Short])],
                                 partition_num: Int,
                                 center_2_partition: Array[(Int, Trie)],
@@ -91,7 +93,7 @@ def shuffle_data_partition_mode(sc: SparkContext,
  *  output: Array[Float]: distance to query;
  *          int: candidate size;
  *          int: partition size; */
-def process_one_query_partition_mode(sc: SparkContext,
+def Query.process_one_query_partition_mode(sc: SparkContext,
                                     query: Array[Float],
                                     pivots: Array[(Short, Array[Float])],
                                     comp_struct: Compress_Structure,
@@ -102,7 +104,7 @@ def process_one_query_partition_mode(sc: SparkContext,
 ```scala
 /** index traversal; 
  *  output: Array[Int]: partition ids; */ 
-def search_partition_mode(p4s_os: Array[Short], 
+def Query.search_partition_mode(p4s_os: Array[Short], 
                           idxcfg: IdxCfg): Array[Int]
 ```
 
