@@ -144,5 +144,5 @@ Compile code and get the jar file: `climer.jar`
 * -q : run data series similarly query;
 
 #  Fairness of Usage 
-Please make sure that the code is used properly.\
-If our research is useful for publication, please reference our paper.
+Please ensure that the code is used correctly.\
+If our research is beneficial for publication, kindly cite our paper.
