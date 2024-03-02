@@ -133,15 +133,16 @@ def Query.search_partition_mode(p4s_os: Array[Short],
 The code has been writen in Scala and compiled in `SBT`.\
 Please update `scalaVersion` and `libraryDependencies` about `spark package` in build.sbt file of source code before compiling it.\
 Make sure the compatibility with `spark packages`.\
-Since I use Jetbrain IDEA to compile code, please refer to following linke to learn how to compile sbt project using IDEA.\
+Since we used Jetbrain IDEA to compile code, please refer to following linke to learn how to compile sbt project using IDEA.\
 https://www.scala-sbt.org/1.x/docs/Running.html\
 https://www.jetbrains.com/help/idea/sbt-support.html#sbt_task
 
-### Configure 
+### Configuration 
 
 The configure file is `./etc/config.conf`.\
 The log is under `./etc/log/`, and log name can be set by `logFileName`.\
-Key parameters:\
+Key parameters in the configuration files:\
+
 **Index:**
 * mode: paratition or group;
 * ts_length: data series dimension;
@@ -164,7 +165,7 @@ Key parameters:\
 * gt**  : parameters create ground truth;
 
 ### System Execution:
-Compile code and get the jar file: `climer.jar`, then execute using the following command:
+Compile the code and generate the corresponding jar file: `climer.jar`. Then, check the different parameters in the configuration files highlighted above for any customization. Finally, execute the following command:
 
 ```sh
 ~/spark/bin/spark-submit --class org.apache.spark.edu.wpi.dsrg.climber --properties-file ./spark-defaults.conf  climer.jar -h
@@ -179,5 +180,5 @@ The different modes are:
 * -q : run data series similarly query;
 
 #  Fairness of Usage 
-Please ensure that the code is used correctly.\
-If our research is beneficial for publication, kindly cite our paper.
+Please ensure that the code is used properly and for research purposes only.\
+If our research is beneficial for your publication, kindly cite our system.
