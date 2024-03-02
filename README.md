@@ -1,4 +1,4 @@
-Repository for paper "CLIMBER:Pivot-Based Approximiate Similarity Search over Big Data Series".
+This is a repository for the CLIMBER project.  
 
 * [Enviornment](#cluster-environment)
 * [Source Code](#source-code)
@@ -161,12 +161,15 @@ Key parameters:\
 * rw**  : parameters generate randomwalk data series;
 * gt**  : parameters create ground truth;
 
-### Run code:
-Compile code and get the jar file: `climer.jar`
+### System Execution:
+Compile code and get the jar file: `climer.jar`, then execute using the following command:
 
 ```sh
 ~/spark/bin/spark-submit --class org.apache.spark.edu.wpi.dsrg.climber --properties-file ./spark-defaults.conf  climer.jar -h
 ```
+CLIMBER executes in different modes to perform different functionalities. The mode setting is controlled by the last flag in the command above. 
+The different modes are:
+
 * -h : display help information;
 * -g : generate raw data series;
 * -c : generate groud truth;
