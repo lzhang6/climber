@@ -1,24 +1,26 @@
-This is a repository for the CLIMBER project.  
+This is a repository for the CLIMBER project. CLIMBER is a Spark-based system for processing, indexing, and querying terabyte-scale of data series DBs. 
 
 * [Enviornment](#cluster-environment)
 * [Source Code](#source-code)
-* [Experimental](#experimental)
+* [Compilation and Execution](#compilation-and-execution)
 
 ## Cluster Environment
 ### Cluster Software
-Install Apache Spark and Hadoop for your cluster afer checking [here](https://spark.apache.org/downloads.html) for the compatibility.\
-Update the spark binary path and shell path in `./etc/startenv.sh` and `./etc/stopenv.sh`.
+Install Apache Spark and Hadoop on your cluster after checking [here](https://spark.apache.org/downloads.html) for the compatibility.\
+Update both the spark binary path and shell path in `./etc/startenv.sh` and `./etc/stopenv.sh`.
 
 ### Cluster Configuration
 
-Update application configure in the `spark-defaults.conf`.  
+Update the application configure in the `spark-defaults.conf`.  
 The configure file of cluster should be stored under `hadoop/etc/hadoop/` and `spark/conf` directories.
 
 
 ## Source Code
 
 ### Structure
-The functional features include: `Index creation` and `Query process` whiile the utilization features include: `Randomwalk creater`, `Evaluation` and `Ground truth generation`.
+The main features of the system include: `Index creation` and `Query processing`, while the utilization features include: `Randomwalk creater`, `Evaluation` and `Ground truth generation`.
+
+Here is a list of the main files in the system:
 
 - Main Entry: `src/.../climber/RunMain.scala`
 - Index data structure: `src/.../climber/idx/*`
@@ -37,7 +39,7 @@ The functional features include: `Index creation` and `Query process` whiile the
   - ground truth config: `src/.../climber/cfg/GtCfg.scala`
   - randomwalk config: `src/.../climber/cfg/RwCfg.scala` 
 
-### Critical Functions
+### Important Functions
 
 ```scala
 /** generate pivots, cache pivots in-memory and persist one copy to disk;
@@ -126,7 +128,7 @@ def Query.search_partition_mode(p4s_os: Array[Short],
                           idxcfg: IdxCfg): Array[Int]
 ```
 
-## Experimental
+## Compilation and Execution
 ### Compilation
 The code has been writen in Scala and compiled in `SBT`.\
 Please update `scalaVersion` and `libraryDependencies` about `spark package` in build.sbt file of source code before compiling it.\
