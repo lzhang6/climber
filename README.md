@@ -42,6 +42,8 @@ The functional features include: `Index creation` and `Query process` whiile the
 ```scala
 /** generate pivots, cache pivots in-memory and persist one copy to disk;
  *  since dataset is load, convert all data series to paa (cache);
+ *  input: sc: sparkContext for running RDD
+ *         idxcfg: config for index construction
  *  output: RDD[Array[Float]]: dataseries_paa;
  *           Broadcast[Array[(Short, Array[Float])]]: pivot_id and pivots; */          
 def Index.sample_pivots(sc: SparkContext, idxcfg: IdxCfg): 
@@ -51,6 +53,9 @@ def Index.sample_pivots(sc: SparkContext, idxcfg: IdxCfg):
 
 ```scala
 /** convert paa to ranking-sensitive representation;
+ *  input: paa: paa rdd of data series
+ *         pivots: pivot id to pivots
+ *         prefix_length: prefix length
  *  output: Array[Short]: representation; */  
 def Ops.cvtPaaTo4Ps_os(paa: Array[Float],
                    pivots: Array[(Short, Array[Float])],
@@ -59,6 +64,7 @@ def Ops.cvtPaaTo4Ps_os(paa: Array[Float],
 
 ```scala
 /** retrieve centers for groups;
+ *  input: p4s_os_weight_sample: p4s_os with weight 
  *  output: Array[Short]: centers; */  
 def Group.retrieve(sc: SparkContext,
             p4s_os_weight_sample: RDD[(String, Long)],
@@ -67,6 +73,8 @@ def Group.retrieve(sc: SparkContext,
 
 ```scala
 /** split group into partitions;
+ *  input:  p4s_os_weight:  p4s_os with weight
+ *          centers: centers of groups
  *  output: Int: partition number;
  *          Array[(Int, Trie)]: center_to_partition; */ 
 def Group.split_groups(sc: SparkContext,
@@ -75,12 +83,18 @@ def Group.split_groups(sc: SparkContext,
                  idxcfg: IdxCfg): (Int, Array[(Int, Trie)])
 ```
 ```scala
-/** trie construction; */ 
+/** trie construction;
+ *  input:  p4s_os_weight: p4s_os with weight
+ *          block_cap: capacity of block */ 
 def Trie.construct(p4s_os_weight: Array[(String, Long)],
             block_cap: Int): Unit
 ```
 ```scala
-/** shuffle all data series; */ 
+/** shuffle all data series;
+ *  input:  centers: centor id to center
+ *          partition_num: total partition number
+ *          center_2_partition: map from cent to partition
+*/ 
 def Index.shuffle_data_partition_mode(sc: SparkContext,
                                 centers: Array[(Int, Array[Short])],
                                 partition_num: Int,
@@ -89,7 +103,10 @@ def Index.shuffle_data_partition_mode(sc: SparkContext,
 ```
 
 ```scala
-/** query one data series; 
+/** query one data series;
+ *  input: query: query data series;
+ *         pivots: pivots id to pivot
+ *         comp_struct: compress structure of index
  *  output: Array[Float]: distance to query;
  *          int: candidate size;
  *          int: partition size; */
@@ -102,7 +119,8 @@ def Query.process_one_query_partition_mode(sc: SparkContext,
 ```
 
 ```scala
-/** index traversal; 
+/** index traversal;
+ * input: p4s_os: p4s_os representation of query data series
  *  output: Array[Int]: partition ids; */ 
 def Query.search_partition_mode(p4s_os: Array[Short], 
                           idxcfg: IdxCfg): Array[Int]
@@ -112,22 +130,34 @@ def Query.search_partition_mode(p4s_os: Array[Short],
 ### Compilation
 The code has been writen in Scala and compiled in `SBT`.\
 Please update `scalaVersion` and `libraryDependencies` about `spark package` in build.sbt file of source code before compiling it.\
-Make sure the compatibility of `spark packages`.
+Make sure the compatibility with `spark packages`.\
+Since I use Jetbrain IDEA to compile code, please refer to following linke to learn how to compile sbt project using IDEA.\
+https://www.scala-sbt.org/1.x/docs/Running.html\
+https://www.jetbrains.com/help/idea/sbt-support.html#sbt_task
 
 ### Configure 
 
 The configure file is `./etc/config.conf`.\
 The log is under `./etc/log/`, and log name can be set by `logFileName`.\
 Key parameters:
+**Index: **
 * mode: paratition or group;
 * ts_length: data series dimension;
 * paa_length: paa length;
 * pivots_num: pivots number;
 * permutation_prefix_length: length of permutation prefix;
+* rwDirPath: raw data path;
+
+**Query:**
+* dataset_path: data path for clustered data;
+* query_num: query number;
 * knn_k: k value for similarity query;
+* dataset_query_path: queries path;
+* label_truth: ground truth path;
 
-
-Other parameters for data series generator and ground truth generator
+**Other**
+* logFileName: log path;
+* blockSize: default HDFS block size, like 64 (MB) or 128 (MB)
 * rw**  : parameters generate randomwalk data series;
 * gt**  : parameters create ground truth;
 
