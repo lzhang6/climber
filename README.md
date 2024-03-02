@@ -140,7 +140,7 @@ https://www.jetbrains.com/help/idea/sbt-support.html#sbt_task
 The configure file is `./etc/config.conf`.\
 The log is under `./etc/log/`, and log name can be set by `logFileName`.\
 Key parameters:\
-**Index: **
+**Index:**
 * mode: paratition or group;
 * ts_length: data series dimension;
 * paa_length: paa length;
